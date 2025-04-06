@@ -13,4 +13,7 @@ export class User {
 
   @Column({ default: 0 })
   balance: number;
+
+  @Column({ default: false })
+  isVerified: boolean;
 }
