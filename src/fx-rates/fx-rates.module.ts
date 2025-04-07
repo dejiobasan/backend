@@ -8,6 +8,6 @@ import { ExchangeRate } from './entities/exchange-rate.entity';
 @Module({
   imports: [HttpModule, ConfigModule, TypeOrmModule.forFeature([ExchangeRate])],
   providers: [FxRatesService],
-  exports: [FxRatesService], // Export the service so other modules can use it
+  exports: [FxRatesService],
 })
 export class FxRatesModule {}

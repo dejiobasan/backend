@@ -48,7 +48,6 @@ export class FxRatesService {
         `${baseUrl}/${baseCurrencies}`,
       ),
     );
-
     const rates = response?.data?.conversion_rates || {};
 
     if (rates) {

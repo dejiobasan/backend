@@ -19,6 +19,14 @@ import 'dotenv/config';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { Wallet } from 'src/wallets/entities/wallet.entity';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthResponseDto } from './dto/auth-response.dto';
 
 interface JwtPayload {
   id: string;
@@ -27,6 +35,7 @@ interface JwtPayload {
   exp?: number;
 }
 
+ApiTags('auth');
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -39,11 +48,19 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'User registered successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid input' })
+  @ApiConflictResponse({ description: 'Email already exists' })
   async register(@Body() registerAuthDto: RegisterAuthDto) {
     return this.authService.register(registerAuthDto);
   }
 
   @Get('verify')
+  @ApiOkResponse({
+    description: 'Email verified successfully',
+    type: AuthResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid token' })
   async verifyEmail(@Query('token') token: string) {
     if (!token) throw new BadRequestException('Token missing');
 
@@ -74,11 +91,25 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'Login successful',
+    type: AuthResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid credentials' })
+  @ApiConflictResponse({ description: 'Email not verified' })
   async login(@Body() body: { email: string; password: string }) {
     return this.authService.login(body.email, body.password);
   }
 
   @Get('me')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'User details retrieved successfully',
+    type: AuthResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid token' })
+  @ApiConflictResponse({ description: 'Email not verified' })
   @UseGuards(JwtAuthGuard)
   getMe(@Request() req: { user: { id: string; email: string } }) {
     return req.user;

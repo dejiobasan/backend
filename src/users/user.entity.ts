@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Trade } from '../trade/trade.entity';
 import { Otp } from '../auth/entities/otp.entity';
 import { Wallet } from '../wallets/entities/wallet.entity';
 import { Transaction } from '../transactions/entities/transaction.entity';
@@ -27,8 +26,6 @@ export class User {
 
   @Column({ default: false })
   isVerified: boolean;
-
-  @OneToMany(() => Trade, (trade) => trade.user) trades: Trade[];
 
   @OneToMany(() => Otp, (otp) => otp.user)
   otps: Otp[];
