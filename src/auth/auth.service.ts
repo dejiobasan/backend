@@ -11,6 +11,9 @@ import * as jwt from 'jsonwebtoken';
 import * as nodemailer from 'nodemailer';
 import 'dotenv/config';
 import { JwtService } from '@nestjs/jwt';
+// import { v4 as uuidv4 } from 'uuid';
+import { RegisterAuthDto } from './dto/register-auth.dto';
+import { Otp } from './entities/otp.entity';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +21,8 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepo: Repository<User>,
     private jwtService: JwtService,
+    @InjectRepository(Otp)
+    private readonly otpRepository: Repository<Otp>,
   ) {}
   async sendVerificationEmail(email: string) {
     const JWT_SECRET = process.env.JWT_SECRET || 'secret';
@@ -40,15 +45,32 @@ export class AuthService {
       html: `<p>Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
     });
   }
-  async register(email: string, password: string) {
-    const userExists = await this.usersRepo.findOne({ where: { email } });
-    if (userExists) throw new ConflictException('Email already in use');
-
+  async register(registerAuthDto: RegisterAuthDto): Promise<void> {
+    const { email, password } = registerAuthDto;
+    const existingUser = await this.usersRepo.findOne({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = this.usersRepo.create({ email, password: hashedPassword });
-    await this.usersRepo.save(user);
+    const newUser = this.usersRepo.create({
+      email,
+      password: hashedPassword,
+    });
+    const savedUser = await this.usersRepo.save(newUser);
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiryAt = new Date();
+    expiryAt.setMinutes(expiryAt.getMinutes() + 15);
+    const newOtp = this.otpRepository.create({
+      user: savedUser,
+      otp: otpCode,
+      expiry_at: expiryAt,
+    });
+    await this.otpRepository.save(newOtp);
+
     await this.sendVerificationEmail(email);
-    return { message: 'User registered. Please verify email.' };
+    console.log(`Generated OTP for ${email}: ${otpCode}`);
   }
 
   async login(email: string, password: string) {

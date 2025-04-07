@@ -7,6 +7,8 @@ import {
   Request,
   UseGuards,
   BadRequestException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as jwt from 'jsonwebtoken';
@@ -15,6 +17,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import 'dotenv/config';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { RegisterAuthDto } from './dto/register-auth.dto';
+import { Wallet } from 'src/wallets/entities/wallet.entity';
 
 interface JwtPayload {
   id: string;
@@ -29,11 +33,14 @@ export class AuthController {
     private authService: AuthService,
     @InjectRepository(User)
     private usersRepo: Repository<User>,
+    @InjectRepository(Wallet)
+    private walletsRepo: Repository<Wallet>,
   ) {}
 
   @Post('register')
-  async register(@Body() body: { email: string; password: string }) {
-    return this.authService.register(body.email, body.password);
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto);
   }
 
   @Get('verify')
@@ -51,6 +58,13 @@ export class AuthController {
 
       user.isVerified = true;
       await this.usersRepo.save(user);
+
+      const defaultWallet = this.walletsRepo.create({
+        user: { id: user.id },
+        currency: 'NGN',
+        balance: 0.0,
+      });
+      await this.walletsRepo.save(defaultWallet);
 
       return { message: 'Email verified successfully!' };
     } catch (err) {

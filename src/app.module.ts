@@ -5,6 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { TradeModule } from './trade/trade.module';
+import { WalletsModule } from './wallets/wallets.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { FxRatesService } from './fx-rates/fx-rates.service';
+import { FxRatesModule } from './fx-rates/fx-rates.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -28,8 +34,13 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    TradeModule,
+    WalletsModule,
+    TransactionsModule,
+    FxRatesModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, FxRatesService],
 })
 export class AppModule {}
