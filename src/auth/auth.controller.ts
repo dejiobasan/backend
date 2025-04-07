@@ -27,6 +27,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { VerifyOtpAuthDto } from './dto/verify-otp-auth.dto';
 
 interface JwtPayload {
   id: string;
@@ -60,6 +61,18 @@ export class AuthController {
     description: 'Email verified successfully',
     type: AuthResponseDto,
   })
+  @ApiBadRequestResponse({ description: 'Invalid OTP!' })
+  @ApiConflictResponse({ description: 'Email already verified' })
+  @ApiCreatedResponse({
+    description: 'Email verification link sent successfully',
+    type: AuthResponseDto,
+  })
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  verify(@Body() verifyOtpAuthDto: VerifyOtpAuthDto) {
+    return this.authService.verifyOtp(verifyOtpAuthDto);
+  }
+
   @ApiBadRequestResponse({ description: 'Invalid token' })
   async verifyEmail(@Query('token') token: string) {
     if (!token) throw new BadRequestException('Token missing');

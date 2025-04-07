@@ -7,6 +7,7 @@ import { User } from '../users/user.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { Otp } from './entities/otp.entity';
 import { WalletsModule } from '../wallets/wallets.module';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { WalletsModule } from '../wallets/wallets.module';
     }),
     WalletsModule,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, MailService],
   controllers: [AuthController],
 })
 export class AuthModule {}

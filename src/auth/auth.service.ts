@@ -2,6 +2,8 @@ import {
   ConflictException,
   Injectable,
   UnauthorizedException,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +16,8 @@ import { JwtService } from '@nestjs/jwt';
 // import { v4 as uuidv4 } from 'uuid';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { Otp } from './entities/otp.entity';
+import { MailService } from 'src/mail/mail.service';
+import { VerifyOtpAuthDto } from './dto/verify-otp-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +27,7 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(Otp)
     private readonly otpRepository: Repository<Otp>,
+    private readonly mailService: MailService,
   ) {}
   async sendVerificationEmail(email: string) {
     const JWT_SECRET = process.env.JWT_SECRET || 'secret';
@@ -70,7 +75,44 @@ export class AuthService {
     await this.otpRepository.save(newOtp);
 
     await this.sendVerificationEmail(email);
+    // Send OTP email
+    const subject = 'Your FX Trading App Verification OTP';
+    const html = `<p>Your One-Time Password (OTP) for email verification is:</p><h3>${otpCode}</h3><p>This OTP will expire in 10 minutes.</p>`;
+    await this.mailService.sendEmail(email, subject, html);
     console.log(`Generated OTP for ${email}: ${otpCode}`);
+  }
+  async verifyOtp(
+    verifyOtpAuthDto: VerifyOtpAuthDto,
+  ): Promise<{ accessToken: string }> {
+    const { email, otp } = verifyOtpAuthDto;
+
+    // Find the user by email
+    const user = await this.usersRepo.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const latestOtp = await this.otpRepository.findOne({
+      where: { user: { id: user.id }, otp },
+      order: { expiry_at: 'DESC' },
+    });
+
+    if (!latestOtp) {
+      throw new BadRequestException('Invalid OTP');
+    }
+
+    if (latestOtp.expiry_at < new Date()) {
+      throw new BadRequestException('OTP has expired');
+    }
+
+    await this.usersRepo.update(user.id, { isVerified: true });
+
+    await this.otpRepository.remove(latestOtp);
+
+    const payload = { sub: user.id, email: user.email };
+    const accessToken = await this.jwtService.signAsync(payload);
+
+    return { accessToken };
   }
 
   async login(email: string, password: string) {

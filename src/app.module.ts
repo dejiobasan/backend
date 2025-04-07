@@ -12,6 +12,7 @@ import { FxRatesModule } from './fx-rates/fx-rates.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HttpModule } from '@nestjs/axios';
 import { ExchangeRate } from './fx-rates/entities/exchange-rate.entity';
+import { MailService } from './mail/mail.service';
 
 @Module({
   imports: [
@@ -43,6 +44,6 @@ import { ExchangeRate } from './fx-rates/entities/exchange-rate.entity';
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService, FxRatesService],
+  providers: [AppService, FxRatesService, MailService],
 })
 export class AppModule {}
