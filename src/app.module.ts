@@ -10,6 +10,8 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { FxRatesService } from './fx-rates/fx-rates.service';
 import { FxRatesModule } from './fx-rates/fx-rates.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HttpModule } from '@nestjs/axios';
+import { ExchangeRate } from './fx-rates/entities/exchange-rate.entity';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     WalletsModule,
     TransactionsModule,
     FxRatesModule,
+    HttpModule,
+    TypeOrmModule.forFeature([ExchangeRate]),
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

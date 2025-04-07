@@ -14,5 +14,6 @@ import { FxRatesModule } from 'src/fx-rates/fx-rates.module';
   ],
   providers: [WalletsService],
   controllers: [WalletsController],
+  exports: [TypeOrmModule],
 })
 export class WalletsModule {}

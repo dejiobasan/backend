@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { Otp } from './entities/otp.entity';
+import { WalletsModule } from '../wallets/wallets.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Otp } from './entities/otp.entity';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
+    WalletsModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

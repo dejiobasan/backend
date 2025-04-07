@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,7 +18,6 @@ export class FxRatesService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
     @InjectRepository(ExchangeRate)
     private readonly exchangeRateRepository: Repository<ExchangeRate>,
   ) {
@@ -41,7 +39,7 @@ export class FxRatesService {
     const baseUrl =
       process.env.EXCHANGE_RATE_API_BASE_URL ||
       'https://api.exchangerate-api.com/v4/latest';
-    const baseCurrencies = 'USD,EUR,GBP,NGN';
+    const baseCurrencies = 'NGN';
 
     const response = await lastValueFrom(
       this.httpService.get<ExchangeRateApiResponse>(
@@ -91,8 +89,10 @@ export class FxRatesService {
     target: string,
     rate: number,
   ): Promise<void> {
+    const baseUpper = base.toUpperCase();
+    const targetUpper = target.toUpperCase();
     const existingRate = await this.exchangeRateRepository.findOne({
-      where: { baseCurrency: base, targetCurrency: target },
+      where: { baseCurrency: baseUpper, targetCurrency: targetUpper },
     });
     if (existingRate) {
       existingRate.rate = rate;
