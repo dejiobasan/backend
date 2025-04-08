@@ -14,7 +14,7 @@ This project is the backend service for an FX trading application. It provides A
 - **Backend Framework**: [e.g., NestJS]
 - **Database**: [e.g., PostgreSQL ]
 - **Authentication**: [e.g., JWT, OTP ]
-- **Others**: [e.g., Redis, WebSocket]
+- **Others**: [e.g., Redis, WebSocket, ExchangeRate-Api]
 
 ## Installation
 
