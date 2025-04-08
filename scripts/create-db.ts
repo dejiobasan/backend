@@ -1,6 +1,10 @@
 import { Client } from 'pg';
 import 'dotenv/config';
 
+/**
+ * @description This script connects to a PostgreSQL database and creates a new database if it doesn't already exist.
+ */
+
 const dbName = 'fx-trading';
 
 async function createDatabase() {

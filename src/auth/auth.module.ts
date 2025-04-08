@@ -9,6 +9,11 @@ import { Otp } from './entities/otp.entity';
 import { WalletsModule } from '../wallets/wallets.module';
 import { MailService } from 'src/mail/mail.service';
 
+/**
+ * @description AuthModule handles user authentication, registration, and OTP verification.
+ * It imports the necessary modules and services for user management, JWT handling, and email sending.
+ */
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Otp]),

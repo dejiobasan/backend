@@ -20,6 +20,15 @@ import {
 } from '@nestjs/swagger';
 import { Wallet } from './entities/wallet.entity';
 
+/**
+ * @description
+ * The WalletsController is responsible for handling all wallet-related HTTP requests.
+ * It includes endpoints for getting user wallets, funding wallets, converting currencies, and trading currencies.
+ * It uses the WalletsService to perform the actual operations and applies JWT authentication for security.
+ * @export
+ * @class WalletsController
+ */
+
 ApiTags('Wallets');
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

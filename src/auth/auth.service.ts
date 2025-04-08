@@ -19,6 +19,13 @@ import { Otp } from './entities/otp.entity';
 import { MailService } from 'src/mail/mail.service';
 import { VerifyOtpAuthDto } from './dto/verify-otp-auth.dto';
 
+/**
+ * @description AuthService handles user authentication, registration, and OTP verification.
+ * It interacts with the User and Otp repositories to manage user data and OTPs.
+ * It also sends verification emails using nodemailer.
+ * @see https://docs.nestjs.com/recipes/authentication
+ */
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -73,7 +80,7 @@ export class AuthService {
       expiry_at: expiryAt,
     });
     await this.otpRepository.save(newOtp);
-
+    // Send verification email
     await this.sendVerificationEmail(email);
     // Send OTP email
     const subject = 'Your FX Trading App Verification OTP';

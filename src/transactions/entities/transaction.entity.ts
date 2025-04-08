@@ -8,6 +8,15 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/user.entity';
 
+/**
+ * @description
+ * The Transaction entity represents a financial transaction in the system.
+ * It includes properties for the transaction ID, user ID, transaction type, amount, currency, rate used, timestamp, and status.
+ * The transaction is linked to a user through a many-to-one relationship.
+ * @export
+ * @class Transaction
+ */
+
 @Entity('transactions')
 export class Transaction {
   @PrimaryGeneratedColumn()

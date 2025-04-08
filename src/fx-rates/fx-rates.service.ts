@@ -7,6 +7,11 @@ import { Repository } from 'typeorm';
 import { ExchangeRate } from './entities/exchange-rate.entity';
 import 'dotenv/config';
 
+/**
+ * @description Service for fetching and storing foreign exchange rates.
+ * It fetches rates from an external API and stores them in a database.
+ */
+
 interface ExchangeRateApiResponse {
   conversion_rates: { [key: string]: number };
 }

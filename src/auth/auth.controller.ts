@@ -29,6 +29,13 @@ import {
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { VerifyOtpAuthDto } from './dto/verify-otp-auth.dto';
 
+/**
+ * @description AuthController handles user authentication, registration, and OTP verification.
+ * It interacts with the AuthService to manage user data and OTPs.
+ * It also sends verification emails using nodemailer.
+ * @see https://docs.nestjs.com/recipes/authentication
+ */
+
 interface JwtPayload {
   id: string;
   email: string;

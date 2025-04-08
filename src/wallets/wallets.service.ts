@@ -12,6 +12,15 @@ import { ConvertCurrencyDto } from './dto/convert-currency.dto';
 import { FxRatesService } from 'src/fx-rates/fx-rates.service';
 import { TradeCurrencyDto, TradeType } from './dto/trade-currency.dto';
 
+/**
+ * @description
+ * The WalletsService is responsible for handling all wallet-related operations.
+ * It includes methods for getting user wallets, funding wallets, converting currencies, and trading currencies.
+ * It uses TypeORM for database operations and FxRatesService for fetching exchange rates.
+ * @export
+ * @class WalletsService
+ */
+
 @Injectable()
 export class WalletsService {
   constructor(

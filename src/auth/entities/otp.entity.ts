@@ -8,6 +8,12 @@ import {
 } from 'typeorm';
 import { User } from '../../users/user.entity';
 
+/**
+ * @description Otp entity representing the OTP table in the database.
+ * It contains the OTP code, expiry date, and a reference to the user it belongs to.
+ * @see https://typeorm.io/#/entities
+ */
+
 @Entity('otps')
 export class Otp {
   @PrimaryGeneratedColumn()

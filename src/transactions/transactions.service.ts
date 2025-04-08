@@ -3,6 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './entities/transaction.entity';
 
+/**
+ * @description
+ * The TransactionsService is responsible for handling all transaction-related operations.
+ * It includes methods for retrieving user transactions.
+ * It uses TypeORM for database operations and provides a repository for transaction entities.
+ * @export
+ * @class TransactionsService
+ */
+
 @Injectable()
 export class TransactionsService {
   constructor(

@@ -1,6 +1,15 @@
 import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * @description
+ * The ConvertCurrencyDto is a Data Transfer Object (DTO) used for converting currencies.
+ * It includes properties for the currency to convert from, the currency to convert to, and the amount to convert.
+ * It uses class-validator decorators for validation and Swagger decorators for API documentation.
+ * @export
+ * @class ConvertCurrencyDto
+ */
+
 export class ConvertCurrencyDto {
   @ApiProperty({
     description: 'The currency to convert from',

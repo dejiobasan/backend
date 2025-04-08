@@ -43,9 +43,9 @@ This project is the backend service for an FX trading application. It provides A
   EXCHANGE_RATE_API_BASE_URL= your exchange rate API url.
   ```
 
-4. Run database migrations (if applicable):
+4. Create a database (if you don't have one reated):
   ```bash
-  npm run migrate
+  npm run create-db
   ```
 
 5. Start the server:

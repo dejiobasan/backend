@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import 'dotenv/config';
 
+/**
+ * @description Service for sending emails using nodemailer.
+ * It uses environment variables for SMTP configuration.
+ */
 @Injectable()
 export class MailService {
   private transporter: nodemailer.Transporter;

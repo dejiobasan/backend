@@ -7,6 +7,15 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * @description
+ * The TradeCurrencyDto is a Data Transfer Object (DTO) used for trading currencies.
+ * It includes properties for the base currency, quote currency, trade type, and amount.
+ * It uses class-validator decorators for validation and Swagger decorators for API documentation.
+ * @export
+ * @class TradeCurrencyDto
+ */
+
 export enum TradeType {
   BUY = 'BUY',
   SELL = 'SELL',
