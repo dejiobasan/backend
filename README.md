@@ -32,10 +32,7 @@ This project is the backend service for an FX trading application. It provides A
 3. Set up environment variables:
   Create a `.env` file in the root directory and configure the required variables:
   ```
-  DB_HOST= your_database_host
-  DB_USERNAME= your_database_user
-  DB_PASSWORD= your_database_password
-  DB_NAME= your_databe_name "preferably fx-trading"
+  SUPABASE_DB_URL = your supabase DB url
   JWT_SECRET= your_jwt_secret
   BASE_URL= your local URL // asides production.
   SMTP_USER= your gmail address

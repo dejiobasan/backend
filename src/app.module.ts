@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -30,19 +30,13 @@ import { MailService } from './mail/mail.service';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-      }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.SUPABASE_DB_URL,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
+      synchronize: true,
+      ssl: { rejectUnauthorized: false },
     }),
     UsersModule,
     AuthModule,
